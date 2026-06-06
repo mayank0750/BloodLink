@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "name": "Maharashtra",
+    "districts": [
+      {
+        "id": 1,
+        "name": "Gadchiroli",
+        "talukas": [
+          "Aheri",
+          "Armori",
+          "Bhamragad",
+          "Chamorshi",
+          "Desaiganj (Wadsa)",
+          "Dhanora",
+          "Etapalli",
+          "Gadchiroli",
+          "Korchi",
+          "Kurkheda",
+          "Mulchera",
+          "Sironcha"
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Chandrapur",
+        "talukas": [
+          "Ballarpur",
+          "Bhadravati",
+          "Bramhapuri",
+          "Chandrapur",
+          "Chimur",
+          "Gondpimpri",
+          "Jivati",
+          "Korpana",
+          "Mul",
+          "Nagbhid",
+          "Pomburna",
+          "Rajura",
+          "Saoli",
+          "Sindewahi",
+          "Warora"
+        ]
+      }
+    ]
+  }
+]
