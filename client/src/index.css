@@ -510,9 +510,12 @@ h1, h2, h3, h4, h5, h6 {
   }
   
   .grid-2,
-  .grid-3,
-  .grid-4 {
+  .grid-3{
     grid-template-columns: 1fr;
+  }
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
   }
   
   .main-content {
@@ -525,6 +528,20 @@ h1, h2, h3, h4, h5, h6 {
   
   .filter-item {
     width: 100%;
+  }
+
+  .card {
+    padding: 0.875rem;
+  }
+
+  .card h3 {
+    font-size: 1rem !important;
+  }
+
+  .card p,
+  .card span,
+  .badge {
+    font-size: 0.8rem !important;
   }
 }
 
@@ -568,6 +585,18 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Mobile */
 @media (max-width: 768px) {
+  .tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 5px;
+  }
+
+  .tab {
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  
   .header {
     position: sticky;
     top: 0;
@@ -597,12 +626,13 @@ h1, h2, h3, h4, h5, h6 {
     border: 1px solid var(--border);
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-    overflow: hidden;
+    overflow: visible;
   }
 
   .mobile-nav.active {
     display: block;
     animation: fadeDown 0.25s ease;
+    overflow: visible;
   }
 
   .nav-menu {
@@ -791,4 +821,14 @@ h1, h2, h3, h4, h5, h6 {
 
 .delete-btn:hover {
   background: #b91c1c;
+}
+
+.pagination-container {
+  overflow-x: auto;
+  justify-content: flex-start;
+  padding-bottom: 8px;
+}
+
+.pagination-container::-webkit-scrollbar {
+  height: 4px;
 }

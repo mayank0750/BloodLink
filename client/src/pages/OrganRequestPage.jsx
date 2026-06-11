@@ -207,7 +207,7 @@ const handleTalukaChange = (e) => {
   };
 
   return (
-    <div className="fade-in" style={{ padding: '0.25rem 2rem', maxWidth: '900px', margin: '0 auto' }}>
+    <div className="fade-in" style={{ padding: '0.25rem 0.2rem', maxWidth: '900px', margin: '0 auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
         <div style={{
           width: '80px',
@@ -250,14 +250,11 @@ const handleTalukaChange = (e) => {
             <div className="success-icon">
               <CheckCircle size={70} />
             </div>
-      
             <h2>Organ Request Submitted</h2>
-      
             <p>
   Thank you for submitting your organ request.
   Your request has been recorded and is now available for review by hospitals, NGOs, and authorized healthcare professionals.
-</p>
-      
+</p> 
             <button
               className="btn-primary"
               onClick={handleModalClose}

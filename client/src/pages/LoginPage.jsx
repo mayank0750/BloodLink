@@ -1,268 +1,609 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { LogIn, Smartphone, AlertCircle } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Smartphone, AlertCircle } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login, verifyOTP } = useAuth();
-  
-  const [step, setStep] = useState(1); // 1: mobile, 2: OTP
-  const [formData, setFormData] = useState({
-    mobile: '',
-    name: '',
-    email: '',
-    otp: ''
-  });
-  const [userId, setUserId] = useState('');
-  const [generatedOTP, setGeneratedOTP] = useState('');
+
+  const { login, verifyOTP, register, passwordLogin, forgotPassword } =
+    useAuth();
+
+  const [step, setStep] = useState(1);
+
+  const [otpSent, setOtpSent] = useState(false);
+
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+
+  const [error, setError] = useState("");
+
+  const [userId, setUserId] = useState("");
+
+  const [formData, setFormData] = useState({
+    mobile: "",
+    otp: "",
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    setError('');
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+
+    setError("");
+
+    setFieldErrors({
+      ...fieldErrors,
+      [e.target.name]: "",
+    });
   };
 
-  const handleSendOTP = async (e) => {
-    e.preventDefault();
-    
-    if (!formData.mobile || !/^[0-9]{10}$/.test(formData.mobile)) {
-      setError('Please enter a valid 10-digit mobile number');
+  const sendOTP = async () => {
+    const errors = {};
+
+    if (!formData.mobile) {
+      errors.mobile = "Mobile required";
+    }
+
+    if (!/^[0-9]{10}$/.test(formData.mobile)) {
+      errors.mobile = "Enter valid mobile";
+    }
+
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length) {
       return;
     }
 
-    setLoading(true);
-    setError('');
-
     try {
-      const response = await login(formData.mobile, formData.name, formData.email);
-      setUserId(response.userId);
-      setGeneratedOTP(response.otp); // In development only
+      setLoading(true);
+
+      const res = await login(formData.mobile);
+
+      setUserId(res.userId);
+
+      setOtpSent(true);
+    } catch (err) {
+      setFieldErrors({
+        mobile: err.toString(),
+      });
+    }
+
+    setLoading(false);
+  };
+
+  const verifyOtp = async () => {
+    if (!formData.otp) {
+      setError("Enter OTP");
+      return;
+    }
+    try {
+      setLoading(true);
+      await verifyOTP(userId, formData.otp);
       setStep(2);
     } catch (err) {
       setError(err.toString());
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   };
 
-  const handleVerifyOTP = async (e) => {
+  const registerUser = async (e) => {
     e.preventDefault();
-    
-    if (!formData.otp || formData.otp.length !== 6) {
-      setError('Please enter a valid 6-digit OTP');
+
+    const errors = {};
+
+    if (!formData.name?.trim()) {
+      errors.name = "Name is required";
+    }
+
+    if (!formData.email?.trim()) {
+      errors.email = "Email is required";
+    } else if (
+      !/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(formData.email)
+    ) {
+      errors.email = "Enter valid email";
+    }
+
+    if (!formData.password?.trim()) {
+      errors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      errors.password = "Password minimum 6 characters";
+    }
+
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length) {
       return;
     }
 
-    setLoading(true);
-    setError('');
-
     try {
-      await verifyOTP(userId, formData.otp);
-      navigate('/dashboard');
+      setLoading(true);
+
+      await register({
+        mobile: formData.mobile,
+
+        name: formData.name,
+
+        email: formData.email,
+
+        password: formData.password,
+      });
+
+      setStep(3);
+    } catch (err) {
+      setError(String(err));
+    }
+
+    setLoading(false);
+  };
+
+  const handlePasswordLogin = async (e) => {
+    e.preventDefault();
+    if (!formData.mobile.trim()) {
+      setError("Mobile number is required");
+      return;
+    }
+    if (!formData.password.trim()) {
+      setError("Password is required");
+      return;
+    }
+    try {
+      await passwordLogin(formData.mobile, formData.password);
+      navigate("/dashboard");
     } catch (err) {
       setError(err.toString());
-    } finally {
-      setLoading(false);
     }
   };
 
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+
+    const errors = {};
+
+    if (!formData.mobile.trim()) {
+      errors.mobile = "Mobile is required";
+    } else if (!/^[0-9]{10}$/.test(formData.mobile)) {
+      errors.mobile = "Enter valid mobile";
+    }
+
+    if (!formData.password.trim()) {
+      errors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      errors.password = "Password minimum 6 characters";
+    }
+
+    if (!formData.confirmPassword.trim()) {
+      errors.confirmPassword = "Re-enter password";
+    } else if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+    }
+
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await forgotPassword(formData.mobile, formData.password);
+
+      alert("Password updated");
+
+      setFormData({
+        ...formData,
+        password: "",
+        confirmPassword: "",
+      });
+
+      setStep(3);
+    } catch (err) {
+      setError(err.toString());
+    }
+
+    setLoading(false);
+  };
+
   return (
-    <div className="fade-in" style={{ 
-      padding: '0.25rem 2rem', 
-      maxWidth: '500px', 
-      margin: '0 auto',
-      minHeight: 'calc(100vh - 200px)',
-      display: 'flex',
-      alignItems: 'center'
-    }}>
-      <div style={{ width: '100%' }}>
-        <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-          <div style={{
-            width: '80px',
-            height: '80px',
-            background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 1rem',
-            color: 'white'
-          }}>
-            <LogIn size={40} />
-          </div>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '0.25rem' }}>
-            Welcome Back 
-          </h1>
-          <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)' }}>
-            {step === 1 ? 'Login with your mobile number' : 'Enter the OTP sent to your mobile'}
-          </p>
-        </div>
+    <div
+      style={{
+        maxWidth: 500,
+        margin: "40px auto",
+      }}
+    >
+      <h1
+        style={{
+          textAlign: "center",
+        }}
+      >
+        Login
+      </h1>
+      {/* STEP 1 */}
 
-        {error && (
-          <div className="alert alert-error">
-            <AlertCircle size={20} style={{ display: 'inline', marginRight: '0.5rem' }} />
-            {error}
-          </div>
-        )}
+      {step === 1 && (
+        <div className="card">
+          <label>Mobile Number</label>
 
-        {step === 1 ? (
-          <form onSubmit={handleSendOTP} className="card">
-            <div className="form-group">
-              <label className="form-label">Mobile Number *</label>
-              <div style={{ position: 'relative' }}>
-                <input
-                  type="tel"
-                  name="mobile"
-                  value={formData.mobile}
-                  onChange={handleChange}
-                  className="form-input"
-                  placeholder="Enter 10-digit mobile number"
-                  maxLength="10"
-                  style={{ paddingLeft: '3rem' }}
-                />
-                <Smartphone 
-                  size={20} 
-                  style={{ 
-                    position: 'absolute', 
-                    left: '1rem', 
-                    top: '50%', 
-                    transform: 'translateY(-50%)',
-                    color: 'var(--text-muted)'
-                  }} 
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="Your name"
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="your.email@example.com"
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="Enter your password"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary"
-              style={{
-                width: '100%',
-                marginTop: '1rem',
-                fontSize: '1.1rem',
-                padding: '1rem'
-              }}
-            >
-              {loading ? 'Sending OTP...' : 'Send OTP'}
-            </button>
-
-            {/* <p style={{ 
-              textAlign: 'center', 
-              marginTop: '1.5rem', 
-              color: 'var(--text-muted)',
-              fontSize: '0.9rem'
-            }}>
-              Not a donor yet? <a href="/register" style={{ color: 'var(--primary)', fontWeight: 600 }}>Register here</a>
-            </p> */}
-          </form>
-        ) : (
-          <form onSubmit={handleVerifyOTP} className="card">
-            {generatedOTP && (
-              <div className="alert alert-info" style={{ marginBottom: '1.5rem' }}>
-                <strong>Development Mode:</strong> Your OTP is <strong>{generatedOTP}</strong>
-              </div>
+          <div
+            style={{
+              position: "relative",
+            }}
+          >
+            <input
+              name="mobile"
+              value={formData.mobile}
+              onChange={handleChange}
+              placeholder="Enter Mobile"
+              maxLength="10"
+              disabled={otpSent}
+              className="form-input"
+              style={{ paddingLeft: "3rem" }}
+            />
+            {fieldErrors.mobile && (
+              <p style={{ color: "red", fontSize: 12 }}>
+                {" "}
+                {fieldErrors.mobile}{" "}
+              </p>
             )}
 
-            <div className="form-group">
-              <label className="form-label">Enter OTP *</label>
-              <input
-                type="text"
-                name="otp"
-                value={formData.otp}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="6-digit OTP"
-                maxLength="6"
-                style={{ 
-                  fontSize: '1.5rem', 
-                  letterSpacing: '0.5rem',
-                  textAlign: 'center'
-                }}
-              />
-              <p style={{ 
-                marginTop: '0.75rem', 
-                fontSize: '0.9rem', 
-                color: 'var(--text-muted)' 
-              }}>
-                OTP sent to +91 {formData.mobile}
-              </p>
-            </div>
+            <Smartphone
+              size={18}
+              style={{
+                position: "absolute",
+                left: "1rem",
+                top: 14,
+              }}
+            />
+          </div>
 
+          {!otpSent && (
             <button
-              type="submit"
-              disabled={loading}
               className="btn-primary"
               style={{
-                width: '100%',
-                marginTop: '1rem',
-                fontSize: '1.1rem',
-                padding: '1rem'
+                width: "100%",
+                marginTop: 15,
+              }}
+              onClick={sendOTP}
+            >
+              {loading ? "Sending..." : "Send OTP"}
+            </button>
+          )}
+
+          <p style={{ textAlign: "center", marginTop: "1rem" }}>
+            Already registered?{" "}
+            <span
+              onClick={() => {
+                setStep(3);
+                setError("");
+              }}
+              style={{
+                color: "red",
+                fontWeight: "600",
+                cursor: "pointer",
+                textDecoration: "underline",
               }}
             >
-              {loading ? 'Verifying...' : 'Verify & Login'}
-            </button>
+              Login here
+            </span>
+          </p>
 
-            <button
-              type="button"
+          {otpSent && (
+            <>
+              <div
+                style={{
+                  marginTop: 20,
+                }}
+              >
+                <label>Enter OTP</label>
+
+                <input
+                  name="otp"
+                  value={formData.otp}
+                  onChange={handleChange}
+                  placeholder="6 digit OTP"
+                  maxLength="6"
+                  className="form-input"
+                />
+              </div>
+
+              <button
+                className="btn-primary"
+                style={{
+                  width: "100%",
+                  marginTop: 15,
+                }}
+                onClick={verifyOtp}
+              >
+                Verify OTP
+              </button>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* STEP 2 */}
+
+      {step === 2 && (
+        <form onSubmit={registerUser} className="card">
+          <label>Mobile</label>
+
+          <input value={formData.mobile} disabled className="form-input" />
+
+          <label>Name</label>
+
+          <input name="name" onChange={handleChange} className="form-input" />
+          {fieldErrors.name && (
+            <p
+              style={{
+                color: "red",
+                fontSize: "12px",
+                marginTop: "4px",
+              }}
+            >
+              {fieldErrors.name}
+            </p>
+          )}
+
+          <label>Email</label>
+
+          <input name="email" onChange={handleChange} className="form-input" />
+          {fieldErrors.email && (
+            <p
+              style={{
+                color: "red",
+                fontSize: "12px",
+              }}
+            >
+              {fieldErrors.email}
+            </p>
+          )}
+
+          <label>Password</label>
+
+          <input
+            type="password"
+            name="password"
+            onChange={handleChange}
+            className="form-input"
+          />
+          {fieldErrors.password && (
+            <p
+              style={{
+                color: "red",
+                fontSize: "12px",
+              }}
+            >
+              {fieldErrors.password}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            className="btn-primary"
+            style={{
+              width: "100%",
+              marginTop: 20,
+            }}
+          >
+            Registration
+          </button>
+          <p style={{ textAlign: "center", marginTop: "1rem" }}>
+            Already registered?{" "}
+            <span
+              onClick={() => {
+                setStep(3);
+                setError("");
+              }}
+              style={{
+                color: "red",
+                fontWeight: "600",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+            >
+              Login here
+            </span>
+          </p>
+        </form>
+      )}
+
+      {/* STEP 3 - Password Login */}
+      {step === 3 && (
+        <form onSubmit={handlePasswordLogin} className="card">
+          <div className="form-group">
+            <label className="form-label">Mobile Number *</label>
+
+            <input
+              type="tel"
+              name="mobile"
+              value={formData.mobile}
+              onChange={handleChange}
+              className="form-input"
+              placeholder="Enter mobile number"
+              maxLength="10"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Password *</label>
+
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="form-input"
+              placeholder="Enter password"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-primary"
+            style={{
+              width: "100%",
+              marginTop: "1rem",
+              fontSize: "1.1rem",
+              padding: "1rem",
+            }}
+          >
+            Login
+          </button>
+          <p
+            style={{
+              textAlign: "center",
+              marginTop: "1rem",
+              fontSize: "0.95rem",
+            }}
+          >
+            Not registered yet?{" "}
+            <span
               onClick={() => {
                 setStep(1);
-                setFormData({ ...formData, otp: '' });
-                setError('');
+                setError("");
               }}
-              className="btn-outline"
               style={{
-                width: '100%',
-                marginTop: '1rem'
+                color: "red",
+                fontWeight: "600",
+                cursor: "pointer",
+                textDecoration: "underline",
               }}
             >
-              Change Mobile Number
-            </button>
-          </form>
-        )}
-      </div>
+              Register here
+            </span>
+          </p>
+          <p
+            style={{
+              textAlign: "center",
+              marginTop: "10px",
+            }}
+          >
+            <span
+              onClick={() => {
+                setStep(4);
+                setError("");
+              }}
+              style={{
+                color: "blue",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+            >
+              Forgot Password?
+            </span>
+          </p>
+        </form>
+      )}
+
+      {step === 4 && (
+        <form onSubmit={handleForgotPassword} className="card">
+          <label>Mobile</label>
+
+          <input
+            name="mobile"
+            value={formData.mobile}
+            onChange={handleChange}
+            className="form-input"
+          />
+
+          {fieldErrors.mobile && (
+            <p
+              style={{
+                color: "red",
+                fontSize: "12px",
+                marginTop: "4px",
+              }}
+            >
+              {fieldErrors.mobile}
+            </p>
+          )}
+
+          <label>New Password</label>
+
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className="form-input"
+          />
+
+          {fieldErrors.password && (
+            <p
+              style={{
+                color: "red",
+                fontSize: "12px",
+                marginTop: "4px",
+              }}
+            >
+              {fieldErrors.password}
+            </p>
+          )}
+
+          <label>Re-enter Password</label>
+
+          <input
+            type="password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className="form-input"
+          />
+
+          {fieldErrors.confirmPassword && (
+            <p
+              style={{
+                color: "red",
+                fontSize: "12px",
+                marginTop: "4px",
+              }}
+            >
+              {fieldErrors.confirmPassword}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            className="btn-primary"
+            style={{
+              width: "100%",
+              marginTop: "20px",
+            }}
+          >
+            {loading ? "Updating..." : "Update Password"}
+          </button>
+
+          <p
+            style={{
+              textAlign: "center",
+              marginTop: "15px",
+            }}
+          >
+            <span
+              onClick={() => {
+                setStep(3);
+                setError("");
+                setFieldErrors({});
+              }}
+              style={{
+                cursor: "pointer",
+                color: "red",
+                textDecoration: "underline",
+              }}
+            >
+              Back to Login
+            </span>
+          </p>
+        </form>
+      )}
     </div>
   );
 };

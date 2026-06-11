@@ -9,6 +9,11 @@ import DashboardPage from './pages/DashboardPage';
 import OrganRequestPage from './pages/OrganRequestPage';
 import LocationsPage from './pages/LocationsPage';
 import AdminMessages from './pages/Messages/AdminMessages';
+import EditProfile from './pages/EditProfile';
+import EditBloodDonor from './pages/EditBloodDonor';
+import EditOrganDonor from './pages/EditOrganDonor';
+import EditDonorRequest from './pages/EditDonorRequest';
+import AddRoles from './pages/AddRoles';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -47,13 +52,53 @@ const AppRoutes = () => {
             }
           />
           {/* <Route
-            path="/admin/messages"
+            path="/edit-profile"
             element={
               <ProtectedRoute>
-                <AdminMessages />
+                <EditProfile />
               </ProtectedRoute>
             }
           /> */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/blood-donor/:id"
+            element={
+              <ProtectedRoute>
+                <EditBloodDonor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/organ-donor/:id"
+            element={
+              <ProtectedRoute>
+                <EditOrganDonor />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/organ-request/:id"
+            element={
+              <ProtectedRoute>
+                <EditDonorRequest />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/add-roles"
+            element={
+              <ProtectedRoute>
+                <AddRoles />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/admin/messages" element={<AdminMessages />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

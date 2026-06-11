@@ -31,7 +31,17 @@ function SaveDonor(values) {
 }
 
 function getBloodDonors(filters = {}) {
-    const params = new URLSearchParams(filters).toString();
+    const cleanedFilters = Object.fromEntries(
+        Object.entries(filters).filter(
+            ([_, value]) =>
+                value !== null &&
+                value !== undefined &&
+                value !== "" &&
+                value !== "null"
+        )
+    );
+
+    const params = new URLSearchParams(cleanedFilters).toString();
 
     const requestOptions = {
         method: "GET",
@@ -45,7 +55,17 @@ function getBloodDonors(filters = {}) {
 }
 
 function getOrganDonors(filters = {}) {
-    const params = new URLSearchParams(filters).toString();
+    const cleanedFilters = Object.fromEntries(
+        Object.entries(filters).filter(
+            ([_, value]) =>
+                value !== null &&
+                value !== undefined &&
+                value !== "" &&
+                value !== "null"
+        )
+    );
+
+    const params = new URLSearchParams(cleanedFilters).toString();
 
     const requestOptions = {
         method: "GET",
@@ -73,7 +93,10 @@ function getDonorById(id) {
 function updateDonor(id, donorData) {
     const requestOptions = {
         method: "PUT",
-        headers: authHeaderToPost(),
+        headers: {
+            ...authHeaderToPost(),
+            "Content-Type": "application/json",
+        },
         body: JSON.stringify(donorData),
     };
 

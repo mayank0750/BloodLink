@@ -1,73 +1,84 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-  name: { 
+  name: {
     type: String,
     trim: true,
-    maxlength: [100, 'Name cannot be more than 100 characters']
+    maxlength: [100, "Name cannot be more than 100 characters"],
   },
   mobile: {
     type: String,
-    required: [true, 'Please add mobile number'],
+    required: [true, "Please add mobile number"],
     unique: true,
-    match: [/^[0-9]{10}$/, 'Please add a valid 10-digit mobile number']
+    match: [/^[0-9]{10}$/, "Please add a valid 10-digit mobile number"],
   },
   email: {
     type: String,
     trim: true,
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      'Please add a valid email'
-    ]
+      "Please add a valid email",
+    ],
+  },
+  password: {
+    type: String,
+    required: true,
   },
   role: {
     type: String,
-    enum: ['user', 'admin', 'hospital', 'ngo'],
-    default: 'user'
+    enum: ["user", "admin", "hospital", "ngo"],
+    default: "user",
   },
   organizationName: {
     type: String,
-    trim: true
+    trim: true,
   },
   organizationType: {
     type: String,
-    enum: ['hospital', 'ngo', 'other']
+    enum: ["hospital", "ngo", "other"],
   },
   registrationNumber: {
     type: String,
-    trim: true
+    trim: true,
   },
   address: {
     type: String,
-    trim: true
+    trim: true,
   },
   city: {
     type: String,
-    trim: true
+    trim: true,
   },
   state: {
     type: String,
-    trim: true
+    trim: true,
   },
   otp: {
-    type: String
+    type: String,
   },
   otpExpiry: {
-    type: Date
+    type: Date,
+  },
+  otpCount: {
+    type: Number,
+    default: 0,
+  },
+  otpDate: {
+    type: Date,
   },
   isVerified: {
     type: Boolean,
-    default: false
+    default: false,
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 // Create index for mobile number
 // userSchema.index({ mobile: 1 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 export default User;

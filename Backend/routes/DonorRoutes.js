@@ -4,13 +4,15 @@ import {registerDonor,
   getOrganDonors,
   getDonorById,
   updateDonor,
-  deleteDonor} from '../controllers/donorController.js';
+  deleteDonor,
+getPublicStats} from '../controllers/donorController.js';
 import { protect, authorize } from '../middleware/auth.js'
 
 const DonorRoutes = express.Router();
 
 // Public routes
 DonorRoutes.post('/', registerDonor);
+DonorRoutes.get("/public", getPublicStats);
 
 // Protected routes
 DonorRoutes.get('/blood', protect, getBloodDonors); 

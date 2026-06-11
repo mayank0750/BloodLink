@@ -1,4 +1,4 @@
-import Donor from '../models/Donor.js'; 
+import Donor from "../models/Donor.js";
 
 // @desc    Register new donor
 // @route   POST /api/donors
@@ -22,33 +22,36 @@ export const registerDonor = async (req, res) => {
       taluka,
       pincode,
       coordinates,
-      consentAccepted
+      consentAccepted,
     } = req.body;
 
     // Check if donor already exists
     const existingDonor = await Donor.findOne({
-      $or: [{ contact }, { email }]
+      $or: [{ contact }, { email }],
     });
 
     if (existingDonor) {
       return res.status(400).json({
         success: false,
-        message: 'Donor with this contact or email already exists'
+        message: "Donor with this contact or email already exists",
       });
     }
 
     // Validate donor type with blood group and organs
-    if (donorType === 'blood' && (!bloodGroup || bloodGroup === 'N/A')) {
+    if (donorType === "blood" && (!bloodGroup || bloodGroup === "N/A")) {
       return res.status(400).json({
         success: false,
-        message: 'Blood group is required for blood donors'
+        message: "Blood group is required for blood donors",
       });
     }
 
-    if ((donorType === 'organ' || donorType === 'both') && (!organs || organs.length === 0)) {
+    if (
+      (donorType === "organ" || donorType === "both") &&
+      (!organs || organs.length === 0)
+    ) {
       return res.status(400).json({
         success: false,
-        message: 'At least one organ is required for organ donors'
+        message: "At least one organ is required for organ donors",
       });
     }
 
@@ -57,8 +60,9 @@ export const registerDonor = async (req, res) => {
       age,
       dob,
       gender,
-      bloodGroup: donorType === 'blood' || donorType === 'both' ? bloodGroup : 'N/A',
-      organs: donorType === 'organ' || donorType === 'both' ? organs : [],
+      bloodGroup:
+        donorType === "blood" || donorType === "both" ? bloodGroup : "N/A",
+      organs: donorType === "organ" || donorType === "both" ? organs : [],
       donorType,
       contact,
       email,
@@ -69,19 +73,19 @@ export const registerDonor = async (req, res) => {
       taluka,
       pincode,
       coordinates: coordinates || {},
-      consentAccepted
+      consentAccepted,
     });
 
     res.status(201).json({
       success: true,
-      message: 'Donor registered successfully',
-      data: donor
+      message: "Donor registered successfully",
+      data: donor,
     });
   } catch (error) {
-    console.error('Error registering donor:', error);
+    console.error("Error registering donor:", error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Server error while registering donor'
+      message: error.message || "Server error while registering donor",
     });
   }
 };
@@ -89,104 +93,160 @@ export const registerDonor = async (req, res) => {
 // @desc    Get blood donors
 // @route   GET /api/donors/blood
 // @access  Private
-// export const getBloodDonors = async (req, res) => {
-//   try {
-//     const { bloodGroup, location, city, state, district, taluka, latitude, longitude, radius } = req.query;
-    
-//     let query = {
-//       donorType: { $in: ['blood', 'both'] },
-//       isActive: true
-//     };
-
-//     if (bloodGroup && bloodGroup !== 'all') {
-//       query.bloodGroup = bloodGroup;
-//     }
-
-//     if (location) {
-//       query.location = { $regex: location, $options: 'i' };
-//     }
-
-//     if (city) {
-//       query.city = { $regex: city, $options: 'i' };
-//     }
-
-//     if (state) {
-//       query.state = { $regex: state, $options: 'i' };
-//     }
-
-//     if (district) {
-//       query.district = { $regex: district, $options: 'i' };
-//     }
-
-//     if (taluka) {
-//       query.taluka = { $regex: taluka, $options: 'i' };
-//     }
-
-//     let donors;
-
-//     // If coordinates are provided, find nearby donors
-//     if (latitude && longitude) {
-//       const lat = parseFloat(latitude);
-//       const lng = parseFloat(longitude);
-//       const searchRadius = radius ? parseFloat(radius) : 30; // Default 30 km
-
-//       // Find donors within radius (using Haversine formula approximation)
-//       const allDonors = await Donor.find(query);
-      
-//       donors = allDonors.filter(donor => {
-//         if (!donor.coordinates || !donor.coordinates.latitude || !donor.coordinates.longitude) {
-//           return false;
-//         }
-        
-//         const distance = calculateDistance(
-//           lat, lng,
-//           donor.coordinates.latitude,
-//           donor.coordinates.longitude
-//         );
-        
-//         return distance <= searchRadius;
-//       }).map(donor => {
-//         const donorObj = donor.toObject();
-//         donorObj.distance = calculateDistance(
-//           lat, lng,
-//           donor.coordinates.latitude,
-//           donor.coordinates.longitude
-//         ).toFixed(2);
-//         return donorObj;
-//       }).sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
-//     } else {
-//       donors = await Donor.find(query).sort({ createdAt: -1 });
-//     }
-
-//     res.status(200).json({
-//       success: true,
-//       count: donors.length,
-//       data: donors
-//     });
-//   } catch (error) {
-//     console.error('Error fetching blood donors:', error);
-//     res.status(500).json({
-//       success: false,
-//       message: 'Server error while fetching blood donors'
-//     });
-//   }
-// };
-
 export const getBloodDonors = async (req, res) => {
   try {
-    const messages = await Donor.find().sort({ createdAt: -1 });
+    const {
+      bloodGroup,
+      location,
+      city,
+      state,
+      district,
+      taluka,
+      latitude,
+      longitude,
+      radius,
+    } = req.query;
 
-    res.status(200).json({
+    console.log("Incoming Query:", req.query);
+
+    // Base query
+    const query = {
+      donorType: { $in: ["blood", "both"] },
+      isActive: true,
+    };
+
+    // Blood group filter
+    if (bloodGroup && bloodGroup !== "all") {
+      query.bloodGroup = bloodGroup;
+    }
+
+    // Location filters
+    if (location?.trim()) {
+      query.location = { $regex: location.trim(), $options: "i" };
+    }
+
+    if (city?.trim()) {
+      query.city = { $regex: city.trim(), $options: "i" };
+    }
+
+    if (state?.trim()) {
+      query.state = { $regex: state.trim(), $options: "i" };
+    }
+
+    if (district?.trim()) {
+      query.district = { $regex: district.trim(), $options: "i" };
+    }
+
+    if (taluka?.trim()) {
+      query.taluka = { $regex: taluka.trim(), $options: "i" };
+    }
+
+    console.log("Mongo Query:", JSON.stringify(query, null, 2));
+
+    let donors = [];
+
+    // Validate coordinates
+    const lat =
+      latitude && latitude !== "null" && latitude !== "undefined"
+        ? Number(latitude)
+        : NaN;
+
+    const lng =
+      longitude && longitude !== "null" && longitude !== "undefined"
+        ? Number(longitude)
+        : NaN;
+
+    const hasValidCoordinates = !isNaN(lat) && !isNaN(lng);
+
+    console.log("=================================");
+    console.log("Received Query:", req.query);
+    console.log("Received Coordinates:", {
+      latitude,
+      longitude,
+    });
+    console.log("Parsed Coordinates:", {
+      lat,
+      lng,
+    });
+    console.log("Has Valid Coordinates:", hasValidCoordinates);
+    console.log("Search Radius:", radius || 50);
+    console.log("=================================");
+
+    // Nearby donor search
+    if (hasValidCoordinates) {
+      console.log(`Searching nearby donors at (${lat}, ${lng})`);
+
+      const searchRadius = radius ? Number(radius) : 50; // default 50 km
+
+      const allDonors = await Donor.find(query);
+
+      donors = allDonors
+        .filter((donor) => {
+          if (
+            !donor.coordinates ||
+            donor.coordinates.latitude == null ||
+            donor.coordinates.longitude == null
+          ) {
+            return false;
+          }
+
+          const distance = calculateDistance(
+            lat,
+            lng,
+            donor.coordinates.latitude,
+            donor.coordinates.longitude,
+          );
+          console.log(`${donor.name} => ${distance.toFixed(2)} km`);
+          console.log({
+            donor: donor.name,
+            donorLat: donor.coordinates.latitude,
+            donorLng: donor.coordinates.longitude,
+            searchLat: lat,
+            searchLng: lng,
+            distance,
+          });
+
+          return distance <= searchRadius;
+        })
+        .map((donor) => {
+          const donorObj = donor.toObject();
+
+          const distance = calculateDistance(
+            lat,
+            lng,
+            donor.coordinates.latitude,
+            donor.coordinates.longitude,
+          );
+
+          return {
+            ...donorObj,
+            distance: Number(distance.toFixed(2)),
+          };
+        })
+        .sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+
+      console.log(`Nearby donors found: ${donors.length}`);
+    } else {
+      // Normal search
+      donors = await Donor.find(query).sort({
+        createdAt: -1,
+      });
+
+      console.log(`Donors found: ${donors.length}`);
+    }
+
+    return res.status(200).json({
       success: true,
-      count: messages.length,
-      messages,
+      count: donors.length,
+      data: donors,
     });
   } catch (error) {
-    console.log("Error fetching messages:", error);
+    console.error("Error fetching blood donors:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: "Server error while fetching blood donors",
+      error: error.message,
     });
   }
 };
@@ -196,71 +256,162 @@ export const getBloodDonors = async (req, res) => {
 // @access  Private
 export const getOrganDonors = async (req, res) => {
   try {
-    const { organ, location, city, latitude, longitude, radius } = req.query;
-    
-    let query = {
-      donorType: { $in: ['organ', 'both'] },
-      isActive: true
+    const {
+      organ,
+      location,
+      city,
+      state,
+      district,
+      taluka,
+      latitude,
+      longitude,
+      radius,
+    } = req.query;
+
+    console.log("Incoming Query:", req.query);
+
+    // Base query
+    const query = {
+      donorType: { $in: ["organ", "both"] },
+      isActive: true,
     };
 
-    if (organ && organ !== 'all') {
-      query.organs = organ;
+    // Filter by organ name from organs array
+    if (organ?.trim() && organ.trim().toLowerCase() !== "all") {
+      query.organs = {
+        $in: [organ.trim()],
+      };
+    }
+    // Location filters
+    if (location?.trim()) {
+      query.location = {
+        $regex: location.trim(),
+        $options: "i",
+      };
     }
 
-    if (location) {
-      query.location = { $regex: location, $options: 'i' };
+    if (city?.trim()) {
+      query.city = {
+        $regex: city.trim(),
+        $options: "i",
+      };
     }
 
-    if (city) {
-      query.city = { $regex: city, $options: 'i' };
+    if (state?.trim()) {
+      query.state = {
+        $regex: state.trim(),
+        $options: "i",
+      };
     }
 
-    let donors;
+    if (district?.trim()) {
+      query.district = {
+        $regex: district.trim(),
+        $options: "i",
+      };
+    }
 
-    // If coordinates are provided, find nearby donors
-    if (latitude && longitude) {
-      const lat = parseFloat(latitude);
-      const lng = parseFloat(longitude);
-      const searchRadius = radius ? parseFloat(radius) : 30; // Default 30 km
+    if (taluka?.trim()) {
+      query.taluka = {
+        $regex: taluka.trim(),
+        $options: "i",
+      };
+    }
 
-      // Find donors within radius
-      const allDonors = await Donor.find(query);
-      
-      donors = allDonors.filter(donor => {
-        if (!donor.coordinates || !donor.coordinates.latitude || !donor.coordinates.longitude) {
-          return false;
-        }
-        
-        const distance = calculateDistance(
-          lat, lng,
-          donor.coordinates.latitude,
-          donor.coordinates.longitude
-        );
-        
-        return distance <= searchRadius;
-      }).map(donor => {
-        const donorObj = donor.toObject();
-        donorObj.distance = calculateDistance(
-          lat, lng,
-          donor.coordinates.latitude,
-          donor.coordinates.longitude
-        ).toFixed(2);
-        return donorObj;
-      }).sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+    console.log("Mongo Query:", JSON.stringify(query, null, 2));
+
+    let organs = [];
+
+    // Validate coordinates
+    const lat =
+      latitude && latitude !== "null" && latitude !== "undefined"
+        ? Number(latitude)
+        : NaN;
+
+    const lng =
+      longitude && longitude !== "null" && longitude !== "undefined"
+        ? Number(longitude)
+        : NaN;
+
+    const hasValidCoordinates = !isNaN(lat) && !isNaN(lng);
+
+    console.log("=================================");
+    console.log("Received Query:", req.query);
+    console.log("Received Coordinates:", {
+      latitude,
+      longitude,
+    });
+    console.log("Parsed Coordinates:", {
+      lat,
+      lng,
+    });
+    console.log("Has Valid Coordinates:", hasValidCoordinates);
+    console.log("Search Radius:", radius || 50);
+    console.log("=================================");
+
+    // Nearby donor search
+    if (hasValidCoordinates) {
+      console.log(`Searching nearby organs at (${lat}, ${lng})`);
+
+      const searchRadius = radius ? Number(radius) : 50;
+
+      const allOrgans = await Donor.find(query);
+
+      organs = allOrgans
+        .filter((donor) => {
+          if (
+            !donor.coordinates ||
+            donor.coordinates.latitude == null ||
+            donor.coordinates.longitude == null
+          ) {
+            return false;
+          }
+
+          const distance = calculateDistance(
+            lat,
+            lng,
+            donor.coordinates.latitude,
+            donor.coordinates.longitude,
+          );
+
+          return distance <= searchRadius;
+        })
+        .map((donor) => {
+          const donorObj = donor.toObject();
+
+          const distance = calculateDistance(
+            lat,
+            lng,
+            donor.coordinates.latitude,
+            donor.coordinates.longitude,
+          );
+
+          return {
+            ...donorObj,
+            distance: Number(distance.toFixed(2)),
+          };
+        })
+        .sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
     } else {
-      donors = await Donor.find(query).sort({ createdAt: -1 });
+      organs = await Donor.find(query).sort({
+        createdAt: -1,
+      });
     }
 
-    res.status(200).json({
+    console.log(`Organ donors found: ${organs.length}`);
+
+    return res.status(200).json({
       success: true,
-      count: donors.length,
-      data: donors
+      count: organs.length,
+      data: organs,
     });
   } catch (error) {
-    console.error('Error fetching organ donors:', error);
-    res.status(500).json({
+    console.error("Error fetching organ donors:", error);
+
+    return res.status(500).json({
       success: false,
-      message: 'Server error while fetching organ donors'
+      message: "Server error while fetching organ donors",
+      error: error.message,
     });
   }
 };
@@ -270,20 +421,22 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371; // Radius of Earth in kilometers
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
-  
-  const a = 
+
+  const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  
+    Math.cos(toRad(lat1)) *
+      Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c;
-  
+
   return distance;
 };
 
 const toRad = (value) => {
-  return value * Math.PI / 180;
+  return (value * Math.PI) / 180;
 };
 
 // @desc    Get donor by ID
@@ -296,19 +449,19 @@ export const getDonorById = async (req, res) => {
     if (!donor) {
       return res.status(404).json({
         success: false,
-        message: 'Donor not found'
+        message: "Donor not found",
       });
     }
 
     res.status(200).json({
       success: true,
-      data: donor
+      data: donor,
     });
   } catch (error) {
-    console.error('Error fetching donor:', error);
+    console.error("Error fetching donor:", error);
     res.status(500).json({
       success: false,
-      message: 'Server error while fetching donor'
+      message: "Server error while fetching donor",
     });
   }
 };
@@ -318,32 +471,29 @@ export const getDonorById = async (req, res) => {
 // @access  Private/Admin
 export const updateDonor = async (req, res) => {
   try {
-    const donor = await Donor.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true
-      }
-    );
+    const donor = await Donor.findByIdAndUpdate(req.params.id, req.body, {
+      returnDocument: "after",
+      runValidators: true,
+    });
 
     if (!donor) {
       return res.status(404).json({
         success: false,
-        message: 'Donor not found'
+        message: "Donor not found",
       });
     }
 
     res.status(200).json({
       success: true,
-      message: 'Donor updated successfully',
-      data: donor
+      message: "Donor updated successfully",
+      data: donor,
     });
+    console.log("Donor updated:", donor);
   } catch (error) {
-    console.error('Error updating donor:', error);
+    console.error("Error updating donor:", error);
     res.status(500).json({
       success: false,
-      message: 'Server error while updating donor'
+      message: "Server error while updating donor",
     });
   }
 };
@@ -358,19 +508,52 @@ export const deleteDonor = async (req, res) => {
     if (!donor) {
       return res.status(404).json({
         success: false,
-        message: 'Donor not found'
+        message: "Donor not found",
       });
     }
 
     res.status(200).json({
       success: true,
-      message: 'Donor deleted successfully'
+      message: "Donor deleted successfully",
     });
   } catch (error) {
-    console.error('Error deleting donor:', error);
+    console.error("Error deleting donor:", error);
     res.status(500).json({
       success: false,
-      message: 'Server error while deleting donor'
+      message: "Server error while deleting donor",
+    });
+  }
+};
+
+// public data in Homepage
+export const getPublicStats = async (req, res) => {
+  try {
+
+    const bloodDonors = await Donor.countDocuments({
+      donorType: { $in: ["blood", "both"] },
+      isActive: true,
+    });
+
+    const organDonors = await Donor.countDocuments({
+      donorType: { $in: ["organ", "both"] },
+      isActive: true,
+    });
+
+    const cities = await Donor.distinct("city");
+
+    res.json({
+      success: true,
+      data: {
+        bloodDonors,
+        organDonors,
+        citiesCovered: cities.length,
+      },
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 };

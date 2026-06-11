@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Filter, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const UsersTable = ({ users }) => {
   const [filters, setFilters] = useState({
@@ -12,7 +13,7 @@ const UsersTable = ({ users }) => {
 
   const [showFilters, setShowFilters] = useState(false);
 
-  const roles = ['admin', 'hospital', 'ngo', 'donor'];
+  const roles = ['admin', 'hospital', 'ngo', 'user'];
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -92,7 +93,7 @@ const UsersTable = ({ users }) => {
         padding: '1.5rem',
         borderRadius: '12px',
         marginBottom: '1.5rem',
-        border: '1px solid var(--border)'
+        border: '1px solid #c81e1e'
       }}>
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
           {/* Search Input */}
@@ -225,23 +226,35 @@ const UsersTable = ({ users }) => {
         )}
       </div>
 
-      {/* Results Summary */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '1rem',
-        padding: '0 0.5rem'
-      }}>
-        <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-          Showing {filteredUsers.length} of {users?.length || 0} users
-        </div>
-        {hasActiveFilters && (
-          <div style={{ color: 'var(--primary)', fontSize: '0.85rem' }}>
-            Filters applied
-          </div>
-        )}
+<div style={{
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: '1rem',
+  padding: '0 0.5rem'
+}}>
+  <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+    Showing {filteredUsers.length} of {users?.length || 0} users
+  </div>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>   
+    {hasActiveFilters && (
+      <div style={{ color: 'var(--primary)', fontSize: '0.85rem' }}>
+        Filters applied
       </div>
+    )}
+    <Link to="/add-roles">
+    <button
+      className="btn-primary"
+      style={{
+        padding: '0.4rem 0.8rem',
+        fontSize: '0.85rem'
+      }}
+    >
+      + Add Role
+    </button>
+    </Link>
+  </div>
+</div>
 
       {/* Table */}
       <div className="table-container">

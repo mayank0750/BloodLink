@@ -35,7 +35,6 @@ export const protect = async (req, res, next) => {
     });
   }
 };
-
 // Admin authorization
 export const authorize = (...roles) => {
   return (req, res, next) => {

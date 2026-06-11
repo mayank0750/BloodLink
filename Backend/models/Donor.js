@@ -39,13 +39,11 @@ const donorSchema = new mongoose.Schema({
   contact: {
     type: String,
     required: [true, 'Please add contact number'],
-    unique: true,
     match: [/^[0-9]{10}$/, 'Please add a valid 10-digit contact number']
   },
   email: {
     type: String,
     required: [true, 'Please add an email'],
-    unique: true,
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       'Please add a valid email'

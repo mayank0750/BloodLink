@@ -227,3 +227,36 @@ export const getOrganRequestStats = async (req, res) => {
     });
   }
 };
+
+// @desc    Public Organ Request Stats
+// @route   GET /api/organ-requests/public-stats
+// @access  Public
+export const getPublicOrganRequestStats = async (req, res) => {
+  try {
+    const totalRequests = await OrganRequest.countDocuments();
+
+    // const pendingRequests = await OrganRequest.countDocuments({
+    //   status: "Pending",
+    // });
+
+    // const criticalRequests = await OrganRequest.countDocuments({
+    //   urgencyLevel: "Critical",
+    // });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        totalRequests,
+        // pendingRequests,
+        // criticalRequests,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching public organ request stats:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching public statistics",
+    });
+  }
+};

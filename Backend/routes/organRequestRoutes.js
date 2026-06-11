@@ -5,7 +5,8 @@ import {
   getOrganRequestById,
   updateOrganRequest,
   deleteOrganRequest,
-  getOrganRequestStats
+  getOrganRequestStats,
+  getPublicOrganRequestStats
 } from '../controllers/organRequestController.js';
 import { protect, authorize } from '../middleware/auth.js';
 
@@ -13,6 +14,7 @@ const organRequestRoutes = express.Router();
 
 // Public routes
 organRequestRoutes.post('/', createOrganRequest);
+organRequestRoutes.get('/public-stats',getPublicOrganRequestStats);
 
 // Protected routes (for hospital, ngo, admin)
 organRequestRoutes.get('/', protect, authorize('admin', 'hospital', 'ngo'), getAllOrganRequests);
