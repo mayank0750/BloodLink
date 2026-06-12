@@ -51,10 +51,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const verifyOTP = async (userId, otp) => {
+  const verifyOTP = async (mobile, otp) => {
     try {
       const response = await axios.post(`${API_URL}/api/users/verify-otp`, {
-        userId,
+        mobile,
         otp,
       });
 

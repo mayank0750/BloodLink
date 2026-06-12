@@ -11,6 +11,7 @@ export const registerDonor = async (req, res) => {
       dob,
       gender,
       bloodGroup,
+      lastDonationDate,
       organs,
       donorType,
       contact,
@@ -62,6 +63,7 @@ export const registerDonor = async (req, res) => {
       gender,
       bloodGroup:
         donorType === "blood" || donorType === "both" ? bloodGroup : "N/A",
+      lastDonationDate,
       organs: donorType === "organ" || donorType === "both" ? organs : [],
       donorType,
       contact,

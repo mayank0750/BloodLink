@@ -4,7 +4,7 @@ import {
   Heart,
   CheckCircle,
   AlertCircle,
-  MapPin, 
+  MapPin,
   Navigation,
 } from "lucide-react";
 import {
@@ -26,6 +26,7 @@ const DonorRegistrationPage = () => {
     gender: "",
     dob: "",
     bloodGroup: "",
+    lastDonationDate: "",
     organs: [],
     donorType: "blood",
     contact: "",
@@ -626,24 +627,39 @@ const DonorRegistrationPage = () => {
 
         {/* Blood Group (if blood donor) */}
         {(formData.donorType === "blood" || formData.donorType === "both") && (
-          <div className="form-group">
-            <label className="form-label">Blood Group *</label>
-            <select
-              name="bloodGroup"
-              value={formData.bloodGroup}
-              onChange={handleChange}
-              className="form-select"
-            >
-              <option value="">Select Blood Group</option>
-              {BLOOD_GROUPS.map((group) => (
-                <option key={group} value={group}>
-                  {group}
-                </option>
-              ))}
-            </select>
-            {errors.bloodGroup && (
-              <div className="form-error">{errors.bloodGroup}</div>
-            )}
+          <div className="grid-2">
+            <div className="form-group">
+              <label className="form-label">Blood Group *</label>
+              <select
+                name="bloodGroup"
+                value={formData.bloodGroup}
+                onChange={handleChange}
+                className="form-select"
+              >
+                <option value="">Select Blood Group</option>
+                {BLOOD_GROUPS.map((group) => (
+                  <option key={group} value={group}>
+                    {group}
+                  </option>
+                ))}
+              </select>
+              {errors.bloodGroup && (
+                <div className="form-error">{errors.bloodGroup}</div>
+              )}
+            </div>
+            <div className="form-group">
+              <label className="form-label">
+                Last Time Blood Donated (Optional)
+              </label>
+
+              <input
+                type="date"
+                name="lastDonationDate"
+                value={formData.lastDonationDate}
+                onChange={handleChange}
+                className="form-input"
+              />
+            </div>
           </div>
         )}
 

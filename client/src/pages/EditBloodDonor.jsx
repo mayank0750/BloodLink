@@ -27,6 +27,7 @@ const EditBloodDonor = () => {
     gender: "",
     dob: "",
     bloodGroup: "",
+    lastDonationDate: "",
     organs: [],
     donorType: "blood",
     contact: "",
@@ -648,6 +649,20 @@ const EditBloodDonor = () => {
             <div className="form-error">{errors.bloodGroup}</div>
           )}
         </div>
+
+        <div className="form-group">
+              <label className="form-label">
+                Last Time Blood Donated (Optional)
+              </label>
+
+              <input
+                type="date"
+                name="lastDonationDate"
+                value={formData.lastDonationDate}
+                onChange={handleChange}
+                className="form-input"
+              />
+            </div>
 
         {/* Contact Information */}
         <div className="grid-2">

@@ -27,6 +27,9 @@ const donorSchema = new mongoose.Schema({
     enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'N/A'],
     default: 'N/A'
   },
+  lastDonationDate: {
+  type: Date,
+},
   organs: [{
     type: String,
     enum: ['Kidney', 'Liver', 'Heart', 'Lungs', 'Pancreas', 'Cornea', 'Skin', 'Bone Marrow', 'N/A']

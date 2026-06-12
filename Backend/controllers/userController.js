@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import axios from "axios";
+import OTP from "../models/Otp.js";
 
 const API_KEY =
   process.env.HANU_OTP_API_KEY || "e14684c98218eebf3708120aeaf453f0";
@@ -24,62 +25,35 @@ export const loginUser = async (req, res) => {
   try {
     const { mobile } = req.body;
 
-    if (!mobile) {
-      return res.status(400).json({
-        message: "Mobile required",
-      });
-    }
-
     const existingUser = await User.findOne({
       mobile,
     });
 
     if (existingUser) {
       return res.status(400).json({
-        success: false,
-        message: "Mobile number already exists. Use another number",
+        message: "Already registered",
       });
     }
 
-    let otpUser = await User.findOne({
+    let otpData = await OTP.findOne({
       mobile,
-      isVerified: false,
     });
 
-    if (!otpUser) {
-      otpUser = new User({
+    if (!otpData) {
+      otpData = new OTP({
         mobile,
-        password: "temp123",
-      });
-    }
-
-    const today = new Date();
-
-    const sameDay =
-      otpUser.otpDate &&
-      new Date(otpUser.otpDate).toDateString() === today.toDateString();
-
-    if (!sameDay) {
-      otpUser.otpCount = 0;
-    }
-
-    if (otpUser.otpCount >= 2) {
-      return res.status(429).json({
-        message: "OTP limit reached. Try tomorrow",
       });
     }
 
     const otp = generateOTP();
 
-    otpUser.otp = otp;
+    otpData.otp = otp;
 
-    otpUser.otpExpiry = Date.now() + 10 * 60 * 1000;
+    otpData.verified = false;
 
-    otpUser.otpCount += 1;
+    otpData.otpExpiry = Date.now() + 600000;
 
-    otpUser.otpDate = today;
-
-    await otpUser.save();
+    await otpData.save();
 
     await axios.get(
       `https://api.hanuotp.in/whatsapp-otp.php?number=${mobile}&OTP=${otp}&apikey=${API_KEY}`,
@@ -87,10 +61,7 @@ export const loginUser = async (req, res) => {
 
     res.json({
       success: true,
-
-      message: "OTP sent",
-
-      userId: otpUser._id,
+      mobile,
     });
   } catch (err) {
     res.status(500).json({
@@ -103,133 +74,68 @@ export const loginUser = async (req, res) => {
 // @route   POST /api/users/verify-otp
 // @access  Public
 export const verifyOTP = async (req, res) => {
-  try {
-    const { userId, otp } = req.body;
+  const { mobile, otp } = req.body;
 
-    if (!userId || !otp) {
-      return res.status(400).json({
-        success: false,
-        message: "Please provide user ID and OTP",
-      });
-    }
+  const data = await OTP.findOne({
+    mobile,
+  });
 
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    // Check OTP
-    if (user.otp !== otp) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid OTP",
-      });
-    }
-
-    // Check OTP expiry
-    if (user.otpExpiry < Date.now()) {
-      return res.status(400).json({
-        success: false,
-        message: "OTP has expired",
-      });
-    }
-
-    // Mark user as verified
-    user.isVerified = true;
-    user.otp = undefined;
-    user.otpExpiry = undefined;
-    await user.save();
-
-    res.status(200).json({
-      success: true,
-      message: "OTP Verified",
-      user: {
-        id: user._id,
-        name: user.name,
-        mobile: user.mobile,
-        email: user.email,
-        role: user.role,
-      },
-    });
-  } catch (error) {
-    console.error("Error verifying OTP:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error while verifying OTP",
+  if (!data) {
+    return res.status(404).json({
+      message: "OTP not found",
     });
   }
+
+  if (data.otp !== otp) {
+    return res.status(400).json({
+      message: "Invalid OTP",
+    });
+  }
+
+  if (data.otpExpiry < Date.now()) {
+    return res.status(400).json({
+      message: "OTP expired",
+    });
+  }
+
+  data.verified = true;
+
+  await data.save();
+
+  res.json({
+    success: true,
+  });
 };
 
 export const registerUser = async (req, res) => {
-  try {
-    const { mobile, name, email, password } = req.body;
+  const { mobile, name, email, password } = req.body;
 
-    let user = await User.findOne({
-      mobile,
-    });
+  const otp = await OTP.findOne({
+    mobile,
+  });
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-
-        message: "Verify mobile first",
-      });
-    }
-
-    if (user.isVerified !== true) {
-      return res.status(400).json({
-        success: false,
-
-        message: "Verify OTP first",
-      });
-    }
-
-    user.name = name;
-
-    user.email = email;
-
-    user.password = password;
-
-    // cleanup
-
-    user.otp = undefined;
-
-    user.otpExpiry = undefined;
-
-    user.otpCount = 0;
-
-    user.otpDate = undefined;
-
-    await user.save();
-
-    res.status(200).json({
-      success: true,
-
-      message: "Registration successful",
-
-      user: {
-        id: user._id,
-
-        name: user.name,
-
-        mobile: user.mobile,
-
-        email: user.email,
-
-        role: user.role,
-      },
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-
-      message: err.message,
+  if (!otp || !otp.verified) {
+    return res.status(400).json({
+      message: "Verify OTP first",
     });
   }
+
+  const user = await User.create({
+    mobile,
+    name,
+    email,
+    password,
+    isVerified: true,
+  });
+
+  await OTP.deleteOne({
+    mobile,
+  });
+
+  res.json({
+    success: true,
+    user,
+  });
 };
 
 export const passwordLogin = async (req, res) => {

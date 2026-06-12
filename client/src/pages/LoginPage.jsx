@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Smartphone, AlertCircle } from "lucide-react";
+import { Smartphone, AlertCircle, CheckCircle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
@@ -10,14 +10,9 @@ const LoginPage = () => {
     useAuth();
 
   const [step, setStep] = useState(1);
-
   const [otpSent, setOtpSent] = useState(false);
-
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
-
-  const [userId, setUserId] = useState("");
 
   const [formData, setFormData] = useState({
     mobile: "",
@@ -29,6 +24,11 @@ const LoginPage = () => {
   });
 
   const [fieldErrors, setFieldErrors] = useState({});
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [modalErrorMessage, setModalErrorMessage] = useState("");
+  const [redirectStep, setRedirectStep] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -42,6 +42,29 @@ const LoginPage = () => {
       ...fieldErrors,
       [e.target.name]: "",
     });
+  };
+
+  const openSuccessModal = (message, nextStep = null) => {
+    setSuccessMessage(message);
+
+    setRedirectStep(nextStep);
+
+    setShowSuccessModal(true);
+  };
+
+  const openErrorModal = (message) => {
+    setModalErrorMessage(message);
+    setShowErrorModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowSuccessModal(false);
+    if (redirectStep === "login") {
+      setStep(3);
+    }
+    if (redirectStep === "dashboard") {
+      navigate("/dashboard");
+    }
   };
 
   const sendOTP = async () => {
@@ -66,8 +89,6 @@ const LoginPage = () => {
 
       const res = await login(formData.mobile);
 
-      setUserId(res.userId);
-
       setOtpSent(true);
     } catch (err) {
       setFieldErrors({
@@ -85,10 +106,10 @@ const LoginPage = () => {
     }
     try {
       setLoading(true);
-      await verifyOTP(userId, formData.otp);
+      await verifyOTP(formData.mobile, formData.otp);
       setStep(2);
     } catch (err) {
-      setError(err.toString());
+      openErrorModal(err.toString());
     }
     setLoading(false);
   };
@@ -135,9 +156,9 @@ const LoginPage = () => {
         password: formData.password,
       });
 
-      setStep(3);
+      openSuccessModal("Successfully Registered", "login");
     } catch (err) {
-      setError(String(err));
+      openErrorModal(String(err));
     }
 
     setLoading(false);
@@ -155,9 +176,9 @@ const LoginPage = () => {
     }
     try {
       await passwordLogin(formData.mobile, formData.password);
-      navigate("/dashboard");
+      openSuccessModal("Welcome to WeLifeLink", "dashboard");
     } catch (err) {
-      setError(err.toString());
+      openErrorModal(err.toString());
     }
   };
 
@@ -195,7 +216,7 @@ const LoginPage = () => {
 
       await forgotPassword(formData.mobile, formData.password);
 
-      alert("Password updated");
+      openSuccessModal("Password Updated Successfully", "login");
 
       setFormData({
         ...formData,
@@ -205,7 +226,7 @@ const LoginPage = () => {
 
       setStep(3);
     } catch (err) {
-      setError(err.toString());
+      openErrorModal(err.toString());
     }
 
     setLoading(false);
@@ -603,6 +624,57 @@ const LoginPage = () => {
             </span>
           </p>
         </form>
+      )}
+
+      {showSuccessModal && (
+        <div className="modal-overlay">
+          <div className="success-modal">
+            <div
+              className="success-icon"
+              style={{
+                color: "#16a34a",
+              }}
+            >
+              <CheckCircle size={70} />
+            </div>
+            <h2>Success</h2>
+            <p>{successMessage}</p>
+            <button className="btn-primary" onClick={handleModalClose}>
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showErrorModal && (
+        <div className="modal-overlay">
+          <div
+            className="success-modal"
+            style={{
+              maxWidth: 500,
+            }}
+          >
+            <div
+              style={{
+                color: "#dc2626",
+                marginBottom: 20,
+              }}
+            >
+              <AlertCircle size={70} />
+            </div>
+            <h2>Something Went Wrong</h2>
+            <p>{modalErrorMessage}</p>
+            <button
+              className="btn-primary"
+              style={{
+                marginTop: 20,
+              }}
+              onClick={() => setShowErrorModal(false)}
+            >
+              OK
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
