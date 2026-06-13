@@ -19,7 +19,18 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "https://welifelink.com",
+  "https://www.welifelink.com"
+];
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true
+  })
+);
 
 app.use("/api/messaging", MessagesRoutes);
 
@@ -30,7 +41,7 @@ app.use('/api/donors', DonorRoutes);
 app.use('/api/organ-requests', organRequestRoutes);
 app.use('/api/locations', locationRoutes);
 
-const PORT = process.env.PORT || 3000;
+const PORT =  process.env.PORT;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

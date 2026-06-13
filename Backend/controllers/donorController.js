@@ -1,5 +1,10 @@
 import Donor from "../models/Donor.js";
 
+const canDonateAgain = (date) => {
+  if (!date) return true;
+  return new Date(date) <= new Date();
+};
+
 // @desc    Register new donor
 // @route   POST /api/donors
 // @access  Public
@@ -56,6 +61,14 @@ export const registerDonor = async (req, res) => {
       });
     }
 
+    let eligibleFrom = null;
+    if (lastDonationDate) {
+      eligibleFrom = new Date(lastDonationDate);
+
+      // 90 days add
+      eligibleFrom.setDate(eligibleFrom.getDate() + 90);
+    }
+
     const donor = await Donor.create({
       name,
       age,
@@ -64,6 +77,7 @@ export const registerDonor = async (req, res) => {
       bloodGroup:
         donorType === "blood" || donorType === "both" ? bloodGroup : "N/A",
       lastDonationDate,
+      eligibleFrom,
       organs: donorType === "organ" || donorType === "both" ? organs : [],
       donorType,
       contact,
@@ -116,6 +130,21 @@ export const getBloodDonors = async (req, res) => {
       donorType: { $in: ["blood", "both"] },
       isActive: true,
     };
+     
+    const role = req.user?.role;
+    // ADMIN
+    if (role !== "admin") {
+      query.$or = [
+        {
+          eligibleFrom: null,
+        },
+        {
+          eligibleFrom: {
+            $lte: new Date(),
+          },
+        },
+      ];
+    }
 
     // Blood group filter
     if (bloodGroup && bloodGroup !== "all") {
@@ -236,6 +265,30 @@ export const getBloodDonors = async (req, res) => {
 
       console.log(`Donors found: ${donors.length}`);
     }
+
+     // Add status
+    donors =
+      donors.map((d) => {
+        const donor =
+          typeof d.toObject ===
+          "function"
+            ? d.toObject()
+            : d;
+
+        return {
+          ...donor,
+
+          canDonate:
+            !donor.eligibleFrom ||
+            new Date(
+              donor.eligibleFrom
+            ) <=
+              new Date(),
+
+          availableAfter:
+            donor.eligibleFrom,
+        };
+      });
 
     return res.status(200).json({
       success: true,
@@ -530,7 +583,6 @@ export const deleteDonor = async (req, res) => {
 // public data in Homepage
 export const getPublicStats = async (req, res) => {
   try {
-
     const bloodDonors = await Donor.countDocuments({
       donorType: { $in: ["blood", "both"] },
       isActive: true,
@@ -551,7 +603,6 @@ export const getPublicStats = async (req, res) => {
         citiesCovered: cities.length,
       },
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,

@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 import env from "dotenv";
 
-const MONGO_URI = "mongodb+srv://korwatemayur_db_user:143%40Mayur@cluster0.ichpx5r.mongodb.net/?appName=Cluster0";
-const dbName = "BloodLink";
+env.config();
+
+const MONGO_URI = process.env.MONGO_URI;
+const dbName = process.env.dbName;
 
 const connectDB = async () => {
   try {

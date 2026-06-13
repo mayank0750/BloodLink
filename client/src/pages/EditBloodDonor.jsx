@@ -12,7 +12,7 @@ import {
   ORGANS,
   GENDERS,
   getCurrentLocation,
-} from "../services/api";
+} from "../services/dataService";
 import { DonorService } from "../services/DonorService.js";
 import locationData from "../data/locationData.json";
 import { useAuth } from "../context/AuthContext";
@@ -314,6 +314,7 @@ const EditBloodDonor = () => {
         gender: donor.gender || "",
         dob: donor.dob ? donor.dob.split("T")[0] : "",
         bloodGroup: donor.bloodGroup || "",
+        lastDonationDate: donor.lastDonationDate ? donor.lastDonationDate.split("T")[0] : "",
         donorType: "blood",
         contact: donor.contact || "",
         email: donor.email || "",
@@ -629,6 +630,7 @@ const EditBloodDonor = () => {
         </div>
 
         {/* Blood Group (if blood donor) */}
+        <div className="grid-2">
         <div className="form-group">
           <label className="form-label">Blood Group *</label>
           <select
@@ -649,12 +651,10 @@ const EditBloodDonor = () => {
             <div className="form-error">{errors.bloodGroup}</div>
           )}
         </div>
-
         <div className="form-group">
               <label className="form-label">
                 Last Time Blood Donated (Optional)
               </label>
-
               <input
                 type="date"
                 name="lastDonationDate"
@@ -663,6 +663,7 @@ const EditBloodDonor = () => {
                 className="form-input"
               />
             </div>
+        </div>
 
         {/* Contact Information */}
         <div className="grid-2">

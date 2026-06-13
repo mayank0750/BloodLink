@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Filter, Search, Navigation, CheckCircle } from "lucide-react";
-import { BLOOD_GROUPS, ORGANS, getCurrentLocation } from "../services/api";
+import { BLOOD_GROUPS, ORGANS, getCurrentLocation } from "../services/dataService";
 
 const LocationFilter = ({
   filters,

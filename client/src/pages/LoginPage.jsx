@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Smartphone, AlertCircle, CheckCircle } from "lucide-react";
+import { Smartphone,LogIn, AlertCircle, CheckCircle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
@@ -165,22 +165,45 @@ const LoginPage = () => {
   };
 
   const handlePasswordLogin = async (e) => {
-    e.preventDefault();
-    if (!formData.mobile.trim()) {
-      setError("Mobile number is required");
-      return;
-    }
-    if (!formData.password.trim()) {
-      setError("Password is required");
-      return;
-    }
-    try {
-      await passwordLogin(formData.mobile, formData.password);
-      openSuccessModal("Welcome to WeLifeLink", "dashboard");
-    } catch (err) {
-      openErrorModal(err.toString());
-    }
-  };
+  e.preventDefault();
+
+  const errors = {};
+
+  if (!formData.mobile.trim()) {
+    errors.mobile = "Mobile number is required";
+  } else if (!/^[0-9]{10}$/.test(formData.mobile)) {
+    errors.mobile = "Enter valid mobile number";
+  }
+
+  if (!formData.password.trim()) {
+    errors.password = "Password is required";
+  }
+
+  setFieldErrors(errors);
+
+  if (Object.keys(errors).length) {
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    await passwordLogin(
+      formData.mobile,
+      formData.password
+    );
+
+    openSuccessModal(
+      "Welcome to WeLifeLink",
+      "dashboard"
+    );
+
+  } catch (err) {
+    openErrorModal(err.toString());
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
@@ -236,16 +259,28 @@ const LoginPage = () => {
     <div
       style={{
         maxWidth: 500,
-        margin: "40px auto",
+        margin: "10px auto",
       }}
     >
-      <h1
-        style={{
-          textAlign: "center",
-        }}
-      >
-        Login
-      </h1>
+     <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+          <div style={{
+            width: '80px',
+            height: '80px',
+            background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 1rem',
+            color: 'white'
+          }}>
+            <LogIn size={40} />
+          </div>
+          <h1 style={{ fontSize: '2rem', marginBottom: '0.50rem' }}>
+            Welcome to WeLifeLink
+          </h1>
+        </div>
+
       {/* STEP 1 */}
 
       {step === 1 && (
@@ -450,6 +485,14 @@ const LoginPage = () => {
               placeholder="Enter mobile number"
               maxLength="10"
             />
+            {fieldErrors.mobile && (
+    <p style={{
+      color:"red",
+      fontSize:"12px"
+    }}>
+      {fieldErrors.mobile}
+    </p>
+  )}
           </div>
 
           <div className="form-group">
@@ -463,6 +506,14 @@ const LoginPage = () => {
               className="form-input"
               placeholder="Enter password"
             />
+            {fieldErrors.password && (
+    <p style={{
+      color:"red",
+      fontSize:"12px"
+    }}>
+      {fieldErrors.password}
+    </p>
+  )}
           </div>
 
           <button

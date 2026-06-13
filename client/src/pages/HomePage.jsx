@@ -100,7 +100,7 @@ const HomePage = () => {
                 letterSpacing: "1px",
               }}
             >
-              SAVE LIVES • BE A HERO
+              BE A HERO • CONNECTING DONORS • SAVING LIVES
             </span>
           </div>
 
@@ -116,9 +116,9 @@ const HomePage = () => {
               backgroundClip: "text",
             }}
           >
-            Every Drop Counts,
+            Connecting Lives,
             <br />
-            Every Life Matters
+            One Donation at a Time
           </h1>
           <p
             style={{
@@ -129,9 +129,9 @@ const HomePage = () => {
               margin: "0 auto 3rem",
             }}
           >
-            Join India's most trusted blood and organ donation platform. Connect
-            with donors, save lives, and create hope for families across the
-            nation.
+            WeLifeLink connects blood and organ donors with people in need.
+            Register as a donor, request support, and help save lives across
+            India.
           </p>
           <div
             style={{
@@ -187,6 +187,15 @@ const HomePage = () => {
               <Users size={20} />
             </Link>
           </div>
+          <p
+            style={{
+              fontSize: "0.95rem",
+              opacity: 0.9,
+              marginTop: "1.5rem",
+            }}
+          >
+            ❤️ Blood Donation • 🫀 Organ Support • 🤝 Direct Connections
+          </p>
         </div>
       </section>
 
@@ -360,7 +369,7 @@ const HomePage = () => {
               marginBottom: "2rem",
             }}
           >
-            <h2 style={{color:"#c81e1e"}}>Live Impact Dashboard</h2>
+            <h2 style={{ color: "#c81e1e" }}>Live Impact Dashboard</h2>
             <p style={{ color: "var(--text-secondary)" }}>
               Real-time statistics updated from our donor network and organ
               request system.

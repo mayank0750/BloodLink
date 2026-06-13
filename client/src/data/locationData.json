@@ -5,24 +5,109 @@
     "districts": [
       {
         "id": 1,
-        "name": "Gadchiroli",
+        "name": "Ahilyanagar (Ahmednagar)",
         "talukas": [
-          "Aheri",
-          "Armori",
-          "Bhamragad",
-          "Chamorshi",
-          "Desaiganj (Wadsa)",
-          "Dhanora",
-          "Etapalli",
-          "Gadchiroli",
-          "Korchi",
-          "Kurkheda",
-          "Mulchera",
-          "Sironcha"
+          "Akole",
+          "Jamkhed",
+          "Karjat",
+          "Kopargaon",
+          "Nevasa",
+          "Parner",
+          "Pathardi",
+          "Rahata",
+          "Rahuri",
+          "Sangamner",
+          "Shevgaon",
+          "Shreerampur",
+          "Shrigonda",
+          "Ahmednagar"
         ]
       },
       {
         "id": 2,
+        "name": "Akola",
+        "talukas": [
+          "Akola",
+          "Akot",
+          "Balapur",
+          "Barshitakli",
+          "Murtizapur",
+          "Patur",
+          "Telhara"
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Amravati",
+        "talukas": [
+          "Achalpur",
+          "Amravati",
+          "Anjangaon Surji",
+          "Bhatkuli",
+          "Chandurbazar",
+          "Chandur Railway",
+          "Chikhaldara",
+          "Daryapur",
+          "Dhamangaon Railway",
+          "Dharni",
+          "Morshi",
+          "Nandgaon Khandeshwar",
+          "Teosa",
+          "Warud"
+        ]
+      },
+      {
+        "id": 4,
+        "name": "Beed",
+        "talukas": [
+          "Ambejogai",
+          "Ashti",
+          "Beed",
+          "Dharur",
+          "Gevrai",
+          "Kaij",
+          "Majalgaon",
+          "Parli",
+          "Patoda",
+          "Shirur (Kasar)",
+          "Wadwani"
+        ]
+      },
+      {
+        "id": 5,
+        "name": "Bhandara",
+        "talukas": [
+          "Bhandara",
+          "Lakhandur",
+          "Lakhani",
+          "Mohadi",
+          "Pauni",
+          "Sakoli",
+          "Tumsar"
+        ]
+      },
+      {
+        "id": 6,
+        "name": "Buldhana",
+        "talukas": [
+          "Buldhana",
+          "Chikhli",
+          "Deulgaon Raja",
+          "Jalgaon (Jamod)",
+          "Khamgaon",
+          "Lonar",
+          "Malkapur",
+          "Mehkar",
+          "Motala",
+          "Nandura",
+          "Sangrampur",
+          "Shegaon",
+          "Sindkhed Raja"
+        ]
+      },
+      
+      {
+        "id": 7,
         "name": "Chandrapur",
         "talukas": [
           "Ballarpur",
@@ -40,6 +125,458 @@
           "Saoli",
           "Sindewahi",
           "Warora"
+        ]
+      },
+      {
+        "id": 8,
+        "name": "Chhatrapati Sambhajinagar (Aurangabad)",
+        "talukas": [
+          "Chhatrapati Sambhajinagar (Aurangabad)",
+          "Gangapur",
+          "Kannad",
+          "Khuldabad",
+          "Paithan",
+          "Phulambri",
+          "Sillod",
+          "Soegaon",
+          "Vaijapur"
+        ]
+      },
+      {
+        "id": 9,
+        "name": "Dhule",
+        "talukas": [
+          "Dhule",
+          "Sakri",
+          "Shindkhede",
+          "Shirpur"
+        ]
+      },
+      {
+        "id": 10,
+        "name": "Dharashiv (Osmanabad)",
+        "talukas": [
+          "Bhoom",
+          "Dharashiv (Osmanabad)",
+          "Kalamb",
+          "Lohara",
+          "Paranda",
+          "Tuljapur",
+          "Umarga",
+          "Washi"
+        ]
+      },
+      
+      {
+        "id": 11,
+        "name": "Gadchiroli",
+        "talukas": [
+          "Aheri",
+          "Armori",
+          "Bhamragad",
+          "Chamorshi",
+          "Desaiganj (Wadsa)",
+          "Dhanora",
+          "Etapalli",
+          "Gadchiroli",
+          "Korchi",
+          "Kurkheda",
+          "Mulchera",
+          "Sironcha"
+        ]
+      },
+      {
+        "id": 12,
+        "name": "Gondia",
+        "talukas": [
+          "Amgaon",
+          "Arjun Morgaon",
+          "Deori",
+          "Gondia",
+          "Goregaon",
+          "Sadak Arjuni",
+          "Salekasa",
+          "Tirora"
+        ]
+      },
+      {
+        "id": 13,
+        "name": "Hingoli",
+        "talukas": [
+          "Aundha Nagnath",
+          "Basmath",
+          "Hingoli",
+          "Kalamnuri",
+          "Sengarson (Sengaon)"
+        ]
+      },
+      {
+        "id": 14,
+        "name": "Jalgaon",
+        "talukas": [
+          "Amalner",
+          "Bhadgaon",
+          "Bhusawal",
+          "Bodwad",
+          "Chalisgaon",
+          "Chopda",
+          "Erandol",
+          "Jalgaon",
+          "Jamner",
+          "Muktainagar",
+          "Pachora",
+          "Parola",
+          "Raver",
+          "Dharangaon",
+          "Yawal"
+        ]
+      },
+      {
+        "id": 15,
+        "name": "Jalna",
+        "talukas": [
+          "Ambad",
+          "Badnapur",
+          "Bhokardan",
+          "Ghansawangi",
+          "Jafrabad",
+          "Jalna",
+          "Mantha",
+          "Partur"
+        ]
+      },
+      {
+        "id": 16,
+        "name": "Kolhapur",
+        "talukas": [
+          "Ajara",
+          "Bhudargad",
+          "Chandgad",
+          "Gaganbawada",
+          "Hatkanangale",
+          "Kagal",
+          "Karveer",
+          "Panhala",
+          "Radhanagari",
+          "Shahuwadi",
+          "Shirol",
+          "Gadhinglaj"
+        ]
+      },
+      {
+        "id": 17,
+        "name": "Latur",
+        "talukas": [
+          "Ahmadpur",
+          "Ausa",
+          "Chakur",
+          "Deoni",
+          "Jalkot",
+          "Latur",
+          "Nilanga",
+          "Renapur",
+          "Shirur Anantpal",
+          "Udgir"
+        ]
+      },
+      {
+        "id": 18,
+        "name": "Mumbai City",
+        "talukas": [
+          "Mumbai"
+        ]
+      },
+      {
+        "id": 19,
+        "name": "Mumbai Suburban",
+        "talukas": [
+          "Andheri",
+          "Borivali",
+          "Kurla"
+        ]
+      },
+      {
+        "id": 20,
+        "name": "Nagpur",
+        "talukas": [
+          "Hingna",
+          "Kalameshwar",
+          "Kamptee",
+          "Katol",
+          "Kuhi",
+          "Mouda",
+          "Nagpur (Rural)",
+          "Nagpur (Urban)",
+          "Narkhed",
+          "Parsconi",
+          "Ramtek",
+          "Savner",
+          "Umred"
+        ]
+      },
+      {
+        "id": 21,
+        "name": "Nanded",
+        "talukas": [
+          "Ardhapur",
+          "Bhokar",
+          "Biloli",
+          "Degloor",
+          "Dharmabad",
+          "Hadgaon",
+          "Himayatnagar",
+          "Kandhar",
+          "Kinwat",
+          "Loha",
+          "Mahoor",
+          "Mudkhed",
+          "Mukhed",
+          "Naigaon (Khairgaon)",
+          "Nanded",
+          "Umri"
+        ]
+      },
+      {
+        "id": 22,
+        "name": "Nandurbar",
+        "talukas": [
+          "Akkalkuwa",
+          "Akrani (Dhadgaon)",
+          "Navapur",
+          "Nandurbar",
+          "Shahada",
+          "Taloda"
+        ]
+      },
+      {
+        "id": 23,
+        "name": "Nashik",
+        "talukas": [
+          "Baglan (Satana)",
+          "Chandwad",
+          "Deola",
+          "Dindori",
+          "Igatpuri",
+          "Kalwan",
+          "Malegaon",
+          "Nandgaon",
+          "Nashik",
+          "Niphad",
+          "Peint",
+          "Radha (Radhanagari/Trimbak)",
+          "Sinnar",
+          "Surgana",
+          "Yeola"
+        ]
+      },
+      {
+        "id": 24,
+        "name": "Palghar",
+        "talukas": [
+          "Dahanu",
+          "Jawhar",
+          "Mokhada",
+          "Palghar",
+          "Talasari",
+          "Vasai",
+          "Vikramgad",
+          "Wada"
+        ]
+      },
+      {
+        "id": 25,
+        "name": "Parbhani",
+        "talukas": [
+          "Gangakhed",
+          "Jintur",
+          "Manwath",
+          "Palam",
+          "Parbhani",
+          "Pathri",
+          "Purna",
+          "Sailu",
+          "Sonpeth"
+        ]
+      },
+      {
+        "id": 26,
+        "name": "Pune",
+        "talukas": [
+          "Ambegaon",
+          "Baramati",
+          "Bhor",
+          "Daund",
+          "Haveli",
+          "Indapur",
+          "Junnar",
+          "Khed (Rajgurunagar)",
+          "Maval",
+          "Mulshi",
+          "Pune City",
+          "Purandar",
+          "Shirur",
+          "Velhe"
+        ]
+      },
+      {
+        "id": 27,
+        "name": "Raigad",
+        "talukas": [
+          "Alibag",
+          "Karjat",
+          "Khalapur",
+          "Mahad",
+          "Mangaon",
+          "Mhasala",
+          "Murud",
+          "Panvel",
+          "Pen",
+          "Poladpur",
+          "Roha",
+          "Shrivardhan",
+          "Sudhagad (Pali)",
+          "Tala",
+          "Uran"
+        ]
+      },
+      {
+        "id": 28,
+        "name": "Ratnagiri",
+        "talukas": [
+          "Chiplun",
+          "Dapoli",
+          "Guhagar",
+          "Khed",
+          "Lanja",
+          "Mandangad",
+          "Rajapur",
+          "Ratnagiri",
+          "Sangameshwar"
+        ]
+      },
+      {
+        "id": 29,
+        "name": "Sangli",
+        "talukas": [
+          "Atpadi",
+          "Jath",
+          "Kavathe Mahankal",
+          "Khanapur (Vita)",
+          "Miraj",
+          "Palus",
+          "Shirala",
+          "Tasgaon",
+          "Walwa (Islampur)",
+          "Kadegaon"
+        ]
+      },
+      {
+        "id": 30,
+        "name": "Satara",
+        "talukas": [
+          "Jaoli",
+          "Karad",
+          "Khandala",
+          "Khatav",
+          "Koregaon",
+          "Mahabaleshwar",
+          "Man (Dahiwadi)",
+          "Patan",
+          "Phaltan",
+          "Satara",
+          "Wai"
+        ]
+      },
+      {
+        "id": 31,
+        "name": "Sindhudurg",
+        "talukas": [
+          "Devgad",
+          "Dodamarg",
+          "Kankavli",
+          "Kudal",
+          "Malvan",
+          "Sawantwadi",
+          "Vaibhavwadi",
+          "Vengurla"
+        ]
+      },
+      {
+        "id": 32,
+        "name": "Solapur",
+        "talukas": [
+          "Akkalkot",
+          "Barshi",
+          "Karmala",
+          "Madha",
+          "Malshiras",
+          "Mangalwedha",
+          "Mohol",
+          "Pandharpur",
+          "Sangola",
+          "Solapur North",
+          "Solapur South"
+        ]
+      },
+      {
+        "id": 33,
+        "name": "Thane",
+        "talukas": [
+          "Ambernath",
+          "Bhiwandi",
+          "Kalyan",
+          "Murbad",
+          "Shahapur",
+          "Thane",
+          "Ulhasnagar"
+        ]
+      },
+      {
+        "id": 34,
+        "name": "Wardha",
+        "talukas": [
+          "Arvi",
+          "Ashti",
+          "Deoli",
+          "Hinganghat",
+          "Karanja",
+          "Samudrapur",
+          "Seloo",
+          "Wardha"
+        ]
+      },
+      {
+        "id": 35,
+        "name": "Washim",
+        "talukas": [
+          "Karanja",
+          "Malegaon",
+          "Mangrulpir",
+          "Manora",
+          "Risod",
+          "Washim"
+        ]
+      },
+      {
+        "id": 36,
+        "name": "Yavatmal",
+        "talukas": [
+          "Arni",
+          "Babhulgaon",
+          "Darwha",
+          "Digras",
+          "Ghatanji",
+          "Kalamb",
+          "Kelapur (Pandharkawada)",
+          "Mahagaon",
+          "Maregaon",
+          "Ner",
+          "Pusad",
+          "Ralegaon",
+          "Umarkhed",
+          "Wani",
+          "Yavatmal",
+          "Zari Jamani"
         ]
       }
     ]

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { MapPin, Droplet, Heart, Users, Search } from "lucide-react";
-import { BLOOD_GROUPS, ORGANS } from "../services/api";
+import { BLOOD_GROUPS, ORGANS } from "../services/dataService";
 import { useAuth } from "../context/AuthContext";
 import { LocationService } from "../services/LocationService";
 

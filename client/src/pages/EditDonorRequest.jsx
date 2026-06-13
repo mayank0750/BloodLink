@@ -1,7 +1,7 @@
 import React, { useState ,useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Heart, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
-import { BLOOD_GROUPS, ORGANS, URGENCY_LEVELS } from '../services/api';
+import { BLOOD_GROUPS, ORGANS, URGENCY_LEVELS } from '../services/dataService';
 import { OrganService } from '../services/OrganReqService.js';
 import locationData from '../data/locationData.json';
 import { useAuth } from '../context/AuthContext';

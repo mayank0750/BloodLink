@@ -189,7 +189,7 @@ const DonorsList = ({ donors, type }) => {
                 padding: "0.75rem",
                 borderRadius: "8px",
                 marginBottom: "1rem",
-                border: "1px solid #c81e1e"
+                border: "1px solid #c81e1e",
               }}
             >
               <div
@@ -267,7 +267,24 @@ const DonorsList = ({ donors, type }) => {
               </span>
             </div>
             <div style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>
-              📞 {donor.contact}
+              <div
+                style={{
+                  fontSize: "0.9rem",
+                  color: "var(--text-secondary)",
+                }}
+              >
+                📞{" "}
+                <a
+                  href={`tel:${donor.contact}`}
+                  style={{
+                    color: "var(--primary)",
+                    textDecoration: "none",
+                    fontWeight: "600",
+                  }}
+                >
+                  {donor.contact}
+                </a>
+              </div>
             </div>
             <div style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>
               ✉️ {donor.email}

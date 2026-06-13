@@ -2,9 +2,9 @@ import {
     authHeader,
     authHeaderToPost,
     handleResponse,
-} from "./api2";
+} from "./HandleService";
 
-const API_URL = import.meta.env.ORGAN_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const AdminService = {
     getAllDonors,

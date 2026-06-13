@@ -3,8 +3,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Search, Filter, X, Printer ,Pencil, Trash2} from "lucide-react";
 import { Link } from "react-router-dom";
-import { URGENCY_LEVELS } from "../../services/api";
-import { ORGANS } from "../../services/api";
+import { URGENCY_LEVELS ,ORGANS } from "../../services/dataService";
 import locationData from "../../data/locationData.json";
 import { OrganService } from "../../services/OrganReqService";
 
