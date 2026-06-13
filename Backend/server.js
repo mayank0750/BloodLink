@@ -20,7 +20,24 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-app.use(cors());
+const allowedOrigins = [
+  "https://www.welifelink.com",
+  "https://welifelink.com",
+  "http://localhost:5173"
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed"));
+      }
+    },
+    credentials: true,
+  })
+);
 
 app.use("/api/messaging", MessagesRoutes);
 
