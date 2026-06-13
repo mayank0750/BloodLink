@@ -83,7 +83,7 @@ const HomePage = () => {
             zIndex: 1,
           }}
         >
-          <div
+          <div className="hero-badge"
             style={{
               display: "inline-block",
               background: "rgba(255, 255, 255, 0.2)",
@@ -104,7 +104,7 @@ const HomePage = () => {
             </span>
           </div>
 
-          <h1
+          <h1 className="hero-heading"
             style={{
               fontSize: "4rem",
               marginBottom: "1.5rem",
@@ -120,7 +120,7 @@ const HomePage = () => {
             <br />
             One Donation at a Time
           </h1>
-          <p
+          <p className="hero-subtext"
             style={{
               fontSize: "1.25rem",
               marginBottom: "3rem",

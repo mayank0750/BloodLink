@@ -20,15 +20,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: [
-      "https://www.welifelink.com",
-      "https://welifelink.com"
-    ],
-    credentials: true
-  })
-);
+app.use(cors());
 
 app.use("/api/messaging", MessagesRoutes);
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Smartphone,LogIn, AlertCircle, CheckCircle } from "lucide-react";
+import { Smartphone,LogIn, AlertCircle, CheckCircle, MessageCircle , Send} from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
@@ -352,6 +352,62 @@ const LoginPage = () => {
 
           {otpSent && (
             <>
+               <div
+                style={{
+                  marginTop: 20,
+                  padding: "12px 16px",
+                  background: "linear-gradient(135deg, #25D36615 0%, #128C7E15 100%)",
+                  borderRadius: "12px",
+                  border: "1px solid #25D366",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  animation: "fadeIn 0.4s ease-out"
+                }}
+              >
+                <div
+                  style={{
+                    background: "#25D366",
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0
+                  }}
+                >
+                  <MessageCircle size={22} color="white" />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <p style={{
+                    margin: 0,
+                    fontWeight: 600,
+                    color: "#075E54",
+                    fontSize: "14px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "5px"
+                  }}>
+                    <Send size={14} />
+                    OTP Sent Successfully!
+                  </p>
+                  <p style={{
+                    margin: "4px 0 0 0",
+                    fontSize: "13px",
+                    color: "#128C7E"
+                  }}>
+                    We've sent a 6-digit OTP to WhatsApp number
+                  </p>
+                  <p style={{
+                    margin: "4px 0 0 0",
+                    fontSize: "12px",
+                    color: "#666"
+                  }}>
+                    OTP is valid for 10 minutes
+                  </p>
+                </div>
+              </div>
               <div
                 style={{
                   marginTop: 20,

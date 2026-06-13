@@ -93,7 +93,7 @@ export default function ContactSection() {
       {/* Contact Me Section */}
       <section
         style={{
-          padding: "5rem 2rem",
+          padding: "4rem 1rem",
           background: "#c81e1e",
           color: "white",
         }}
@@ -103,9 +103,10 @@ export default function ContactSection() {
             maxWidth: "1200px",
             margin: "0 auto",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "3rem",
+            gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))",
+            gap: "2rem",
             alignItems: "center",
+            width: "100%",
           }}
         >
           {/* Left Side */}
@@ -147,11 +148,16 @@ export default function ContactSection() {
             onSubmit={handleSubmit}
             style={{
               background: "#fef9f3",
-              padding: "2rem",
+              padding: "1.5rem",
               borderRadius: "20px",
               display: "flex",
               flexDirection: "column",
               gap: "1rem",
+
+              width: "100%",
+              maxWidth: "100%",
+              boxSizing: "border-box",
+              overflow: "hidden",
             }}
           >
             {/* Name */}
@@ -169,6 +175,7 @@ export default function ContactSection() {
                   outline: "none",
                   fontSize: "1rem",
                   width: "100%",
+                  boxSizing: "border-box",
                 }}
               />
               {errors.name && (
@@ -191,6 +198,7 @@ export default function ContactSection() {
                   outline: "none",
                   fontSize: "1rem",
                   width: "100%",
+                  boxSizing: "border-box",
                 }}
               />
               {errors.phone && (
@@ -213,6 +221,7 @@ export default function ContactSection() {
                   outline: "none",
                   fontSize: "1rem",
                   width: "100%",
+                  boxSizing: "border-box",
                 }}
               />
               {errors.email && (
@@ -236,6 +245,7 @@ export default function ContactSection() {
                   fontSize: "1rem",
                   resize: "none",
                   width: "100%",
+                  boxSizing: "border-box",
                 }}
               />
               {errors.message && (
